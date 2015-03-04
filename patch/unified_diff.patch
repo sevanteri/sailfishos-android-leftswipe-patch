@@ -1,0 +1,19 @@
+--- a/usr/share/lipstick-jolla-home-qt5/compositor.qml	2015-03-04 14:13:18.979270182 +0200
++++ b/usr/share/lipstick-jolla-home-qt5/compositor.qml	2015-03-04 14:39:16.774887369 +0200
+@@ -29,10 +29,15 @@
+     property Item inhibitedWindow
+ 
+     property bool topPeekAllowed: true
+-    property bool leftPeekAllowed: true
++    property bool leftPeekAllowed: !topmostIsAndroidApp
+     property bool rightPeekAllowed: true
+     property bool bottomPeekAllowed: true
+ 
++    property bool topmostIsAndroidApp: (
++        (topmostApplicationWindow) &&
++        ((topmostApplicationWindow.window.surface.className.length - topmostApplicationWindow.window.surface.className.lastIndexOf(".desktop")) != 8)
++    )
++
+     // Desired background image offset. Wallpaper layer is
+     // offset by Lipstick.compositor.backgroundVerticalOffset
+     property real backgroundVerticalOffset

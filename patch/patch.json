@@ -1,0 +1,8 @@
+{
+    "name": "Disable Left Swipe for Android",
+    "description": "Disable left swipe when an Android app is running. There is a small chance that this patch might conflict with the partnerspace stuff.",
+    "category": "System",
+    "infos": {
+        "maintainer": "Sevanteri"
+    }
+}
