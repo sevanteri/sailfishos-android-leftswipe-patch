@@ -11,7 +11,8 @@ Group:      Qt/Qt
 License:    TODO
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   patchmanager
-Requires:   sailfish-version >= 1.1.1
+Requires:   sailfish-version >= 1.1.2
+Requires:   sailfish-version < 1.1.3
 
 %description
 Disable left swipe for Android apps.
