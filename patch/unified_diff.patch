@@ -11,7 +11,7 @@
  
 +    property bool topmostIsAndroidApp: (
 +        (topmostApplicationWindow) &&
-+        ((topmostApplicationWindow.window.surface.className.length - topmostApplicationWindow.window.surface.className.lastIndexOf(".desktop")) != 8)
++        (topmostApplicationWindow.window.surface.className.substr(-8) != ".desktop")
 +    )
 +
      // Desired background image offset. Wallpaper layer is
