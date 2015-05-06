@@ -5,14 +5,13 @@ BuildArch: noarch
 # << macros
 
 Summary:    Disable left swipe for Android apps
-Version:    0.0.2
+Version:    0.0.3
 Release:    1
 Group:      Qt/Qt
 License:    TODO
 Source0:    %{name}-%{version}.tar.bz2
 Requires:   patchmanager
-Requires:   sailfish-version >= 1.1.2
-Requires:   sailfish-version < 1.1.3
+Requires:   sailfish-version >= 1.1.4
 
 %description
 Disable left swipe for Android apps.
