@@ -1,49 +1,44 @@
---- a/usr/share/lipstick-jolla-home-qt5/compositor.qml	2015-03-04 14:13:18.979270182 +0200
-+++ b/usr/share/lipstick-jolla-home-qt5/compositor.qml	2015-03-05 08:56:59.010067203 +0200
-@@ -94,6 +94,11 @@
-     // The topmost Alarm window (e.g. incoming voice call, clock alarm)
-     property Item topmostAlarmWindow
+--- a/usr/share/lipstick-jolla-home-qt5/compositor.qml	2015-05-06 19:51:02.536330083 +0300
++++ b/usr/share/lipstick-jolla-home-qt5/compositor.qml	2015-05-07 15:12:30.694360788 +0300
+@@ -101,7 +101,7 @@
  
-+    property bool topmostIsAndroidApp: (
-+        topmostApplicationWindow &&
-+        (topmostApplicationWindow.window.surface.className.substr(-8) != '.desktop')
-+    )
+     PeekFilter {
+         id: globalPeekFilterItem
+-        leftEnabled: true
++        leftEnabled: appLayer.active ? !appLayer.isAndroidApp : true
+         rightEnabled: true
+         topEnabled: true
+         bottomEnabled: true
+@@ -230,6 +230,11 @@
+             if (appLayer.window && appLayer.window != w) appLayer.hideWindow()
+             appLayer.window = w
+             appLayer.window.visible = true
++            appLayer.isAndroidApp = (
++                w.window &&
++                w.window.surface &&
++                (w.window.surface.className.substr(-8) != ".desktop")
++            )
+             w.window.takeFocus()
+         }
+
+
+--- a/usr/share/lipstick-jolla-home-qt5/layers/AppLayer.qml	2015-05-06 20:04:10.010041389 +0300
++++ b/usr/share/lipstick-jolla-home-qt5/layers/AppLayer.qml	2015-05-07 12:04:52.761906618 +0300
+@@ -12,6 +12,8 @@
+     readonly property bool closePeek: peekFilter.topActive
+     readonly property bool switching: switchApplicationAnimation.running
+ 
++    property bool isAndroidApp: false
 +
-     property int eventsWindowOrientation: Qt.PortraitOrientation
-     property bool eventsViewNeedsConnectivity
-     property int inProcessOrientation: (eventPeek || eventsActive) ? eventsWindowOrientation : Qt.PortraitOrientation
-@@ -107,26 +112,34 @@
-     onTopmostDialogWindowChanged: updateWindows()
-     onTopmostAlarmWindowChanged: updateWindows()
-     onTopmostWindowOrientationChanged: {
-+        PeekFilter.topEnabled = root.topPeekAllowed
-+        PeekFilter.leftEnabled = root.leftPeekAllowed
-+        PeekFilter.rightEnabled = root.rightPeekAllowed
-+        PeekFilter.bottomEnabled = root.bottomPeekAllowed
-         switch (topmostWindowOrientation) {
-         case Qt.LandscapeOrientation:
-+            PeekFilter.topEnabled = !topmostIsAndroidApp
-             leftArea = PeekFilter.Top
-             rightArea = PeekFilter.Bottom
-             topArea = PeekFilter.Right
-             bottomArea = PeekFilter.Left
-             break;
-         case Qt.InvertedPortraitOrientation:
-+            PeekFilter.rightEnabled = !topmostIsAndroidApp
-             leftArea = PeekFilter.Right
-             rightArea = PeekFilter.Left
-             topArea = PeekFilter.Bottom
-             bottomArea = PeekFilter.Top
-             break;
-         case Qt.InvertedLandscapeOrientation:
-+            PeekFilter.bottomEnabled = !topmostIsAndroidApp
-             leftArea = PeekFilter.Bottom
-             rightArea = PeekFilter.Top
-             topArea = PeekFilter.Left
-             bottomArea = PeekFilter.Right
-             break;
-         default:
-+            PeekFilter.leftEnabled = !topmostIsAndroidApp
-             leftArea = PeekFilter.Left
-             rightArea = PeekFilter.Right
-             topArea = PeekFilter.Top
+     function switchToApp(w) {
+         switchApplicationAnimation.fromWindow = window
+         switchApplicationAnimation.toWindow = w
+@@ -97,7 +99,7 @@
+     PeekFilter {
+         id: appPeekFilter
+         enabled: appLayer.active
+-        leftEnabled: true
++        leftEnabled: !isAndroidApp
+         rightEnabled: true
+         topEnabled: true
+         onGestureTriggered: {
